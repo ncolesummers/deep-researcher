@@ -1,5 +1,5 @@
 import { assertEquals, assertStringIncludes } from '@std/assert';
-import { simpleResearcher } from './researcher.ts';
+import { simpleResearcher } from '../researcher.ts';
 
 // Mock the LLM service response for testing
 // In a real project, you would use proper mocking frameworks
@@ -37,7 +37,10 @@ Deno.test({
       const originalFetch = globalThis.fetch;
 
       // Hypothetical mock setup
-      globalThis.fetch = (input: URL | RequestInfo, init?: RequestInit) => {
+      globalThis.fetch = function (
+        input: URL | RequestInfo,
+        init?: RequestInit
+      ) {
         // Check if this is an OpenAI API call
         const url = typeof input === 'string' ? input : input.toString();
         if (url.includes('openai')) {
@@ -61,7 +64,7 @@ Deno.test({
 
         // Fall back to original fetch for non-OpenAI requests
         return originalFetch(input, init);
-      };
+      } as typeof fetch;
 
       // Run the function
       const result = await simpleResearcher('What is LangGraph?');

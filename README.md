@@ -4,13 +4,35 @@ An advanced AI-powered tool designed to conduct thorough research in response to
 This project uses Deno, TypeScript, and OpenAI to create a conversational AI assistant 
 that performs comprehensive research and delivers factual, well-cited answers.
 
+## Project Structure
+
+The codebase is organized as follows:
+
+```
+src/
+├── core/                      # Core application logic
+│   ├── researcher.ts          # Main researcher implementation
+│   └── tests/                 # Tests for core components
+│       └── researcher_test.ts
+├── services/                  # External service integrations
+│   └── tavily/                # Tavily search integration
+│       ├── tavily_search.ts   # Tavily search implementation
+│       ├── examples/          # Example usage
+│       │   └── tavily_search_example.ts
+│       └── tests/             # Tests for Tavily integration
+│           └── tavily_search_test.ts
+├── main.ts                    # Main application entry point
+└── tests/                     # Top-level tests
+    └── main_test.ts
+```
+
 ## Getting Started
 
 ### Prerequisites
 
 - [Deno](https://deno.land/) installed (version 1.30.0 or later)
 - OpenAI API key
-- Tavily API key (for future implementation)
+- Tavily API key (for using search functionality)
 
 ### Setup
 
@@ -22,56 +44,47 @@ cp .env.example .env
 # Edit .env to add your API keys
 ```
 
-3. Run the Hello World example:
+3. Run the application:
 
 ```bash
-deno run --allow-net --allow-env main.ts
+deno run --allow-net --allow-env src/main.ts
 ```
 
 ## Features
 
 - Simplified workflow demonstration for a research assistant
 - OpenAI integration for natural language understanding and generation
-- Future implementation will include:
-  - Full LangGraph workflow for orchestration
-  - Tavily search integration for retrieving information from the web
+- Tavily search integration for retrieving information from the web
+- Future implementations will include full LangGraph workflow for orchestration
 
-## Hello World Example
+## Examples
 
-The current implementation includes a simple "Hello World" example that:
+### Basic Researcher
 
-1. Takes a user query
-2. Simulates a research step (would use Tavily in a full implementation)
-3. Generates a response using OpenAI
+```bash
+deno run --allow-net --allow-env src/main.ts
+```
 
-This demonstrates the basic workflow that will be expanded to implement the full 
-Deep Researcher functionality as described in the PRD.
+### Tavily Search
 
-### Note on LangGraph
-
-While the project is designed to eventually use LangGraph for orchestration, the current 
-implementation uses a simplified approach to demonstrate the core concepts. Future versions 
-will incorporate LangGraph for more sophisticated workflow management.
+```bash
+deno run --allow-net --allow-env src/services/tavily/examples/tavily_search_example.ts "Your search query"
+```
 
 ## Running Tests
 
 ```bash
-# Run the basic tests (add function)
-deno test main_test.ts
+# Run the basic tests
+deno test --allow-net src/tests/main_test.ts
+
+# Run the Tavily search tests
+deno test --allow-net src/services/tavily/tests/tavily_search_test.ts
 
 # Run the researcher tests (requires API keys)
-deno test researcher_test.ts
+deno test --allow-net --allow-env src/core/tests/researcher_test.ts
 ```
 
-Note: The researcher tests are currently set to `ignore: true` because they require 
-API keys. Edit the test file to enable them after setting up your environment.
-
-## Project Structure
-
-- `main.ts` - Entry point with basic example
-- `researcher.ts` - Research assistant implementation
-- `main_test.ts` - Basic tests
-- `researcher_test.ts` - Tests for the researcher functionality
+Note: Some tests are set to `ignore: true` because they require API keys. Edit the test files to enable them after setting up your environment.
 
 ## License
 
