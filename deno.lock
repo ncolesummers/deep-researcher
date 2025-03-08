@@ -11,6 +11,7 @@
     "npm:@langchain/langgraph@~0.2.54": "0.2.54_@langchain+core@0.3.42__zod@3.24.2",
     "npm:@langchain/openai@*": "0.4.4_@langchain+core@0.3.42__zod@3.24.2_zod@3.24.2_openai@4.86.2__zod@3.24.2__ws@8.18.1",
     "npm:@langchain/openai@~0.4.4": "0.4.4_@langchain+core@0.3.42__zod@3.24.2_zod@3.24.2_openai@4.86.2__zod@3.24.2__ws@8.18.1",
+    "npm:@opentelemetry/api@1": "1.9.0",
     "npm:zod@^3.24.2": "3.24.2"
   },
   "jsr": {
@@ -199,6 +200,9 @@
         "@langchain/core@0.3.42_openai@4.86.2__zod@3.24.2__ws@8.18.1_zod@3.24.2",
         "js-tiktoken"
       ]
+    },
+    "@opentelemetry/api@1.9.0": {
+      "integrity": "sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg=="
     },
     "@playwright/test@1.50.1": {
       "integrity": "sha512-Jii3aBg+CEDpgnuDxEp/h7BimHcUTDlpEtce89xEumlJ5ef2hqepZ+PWp1DDpYC/VO9fmWVI1IlEaoI5fK9FXQ==",

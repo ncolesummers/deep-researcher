@@ -1,4 +1,11 @@
 import { TavilySearchResults } from 'npm:@langchain/community/tools/tavily_search';
+import { trace } from 'npm:@opentelemetry/api@1';
+import { Logger } from '../../telemetry/logger.ts';
+import * as metrics from '../../telemetry/metrics.ts';
+import {
+  recordSearchLatency,
+  recordDocumentsFetched,
+} from '../../telemetry/monitoring.ts';
 
 /**
  * Configuration options for the Tavily search
@@ -50,6 +57,9 @@ export interface SearchResult {
   score: number;
   raw_content?: string;
 }
+
+// Create a logger for the Tavily service
+const logger = new Logger('TavilySearch');
 
 /**
  * TavilySearchService - A service class for performing web searches using Tavily
@@ -109,45 +119,84 @@ export class TavilySearchService {
   }
 
   /**
-   * Perform a search using Tavily
-   *
-   * @param query The search query
-   * @returns Array of search results
+   * Performs a search using the Tavily API with telemetry instrumentation
+   * @param query - The search query
+   * @param queryId - Optional unique identifier for tracking this query
+   * @returns The search results
    */
-  async search(query: string): Promise<SearchResult[]> {
-    // If we're in test mode, return mock results
-    if (this.isTestMode) {
-      return this.mockResults;
-    }
+  async search(query: string, queryId?: string): Promise<SearchResult[]> {
+    // Create a span for this operation
+    const tracer = trace.getTracer('deep-research-assistant');
+    const span = tracer.startSpan('tavily_search');
+    span.setAttribute('query', query);
+    if (queryId) span.setAttribute('query_id', queryId);
+
+    const startTime = performance.now();
 
     try {
-      console.log(`Performing Tavily search for: "${query}"`);
+      logger.info('Performing Tavily search', { query, queryId });
+
+      // If we're in test mode, return mock results
+      if (this.isTestMode) {
+        logger.info('Using mock results (test mode)', { queryId });
+        return this.mockResults;
+      }
+
       if (!this.tavilyTool) {
+        // Log the initialization
+        logger.warn('Tavily tool not initialized', { queryId });
         throw new Error('Tavily tool not initialized');
       }
 
+      // Execute search with existing logic
       const results = await this.tavilyTool.invoke(query);
 
-      // Parse the results - they come as a JSON string
-      if (typeof results === 'string') {
-        try {
-          return JSON.parse(results) as SearchResult[];
-        } catch (e) {
-          console.error('Error parsing Tavily results:', e);
-          return [];
-        }
-      } else {
-        // Should not happen, but just in case
-        console.warn('Unexpected result type from Tavily:', typeof results);
-        return Array.isArray(results) ? results : [];
+      // Record metrics
+      const duration = performance.now() - startTime;
+      if (queryId) {
+        recordSearchLatency(queryId, duration);
+        recordDocumentsFetched(queryId, results.length);
       }
-    } catch (error: unknown) {
-      console.error('Error performing Tavily search:', error);
+
+      // Track metrics even without a queryId
+      metrics.searchLatency.record(duration);
+      metrics.searchRequests.add(1);
+      metrics.documentsFetched.add(results.length);
+
+      logger.info('Search completed', {
+        queryId,
+        durationMs: duration,
+        resultCount: results.length,
+      });
+
+      return results;
+    } catch (error) {
+      // Handle errors
       if (error instanceof Error) {
-        throw new Error(`Tavily search failed: ${error.message}`);
+        logger.error('Search failed', {
+          queryId,
+          query,
+          errorMessage: error.message,
+        });
+
+        span.recordException({
+          name: error.name,
+          message: error.message,
+          stack: error.stack,
+        });
       } else {
-        throw new Error(`Tavily search failed: ${String(error)}`);
+        logger.error('Search failed with unknown error', {
+          queryId,
+          query,
+        });
       }
+
+      // Record error metric
+      metrics.errorCount.add(1, { operation: 'search' });
+
+      throw error;
+    } finally {
+      span.end();
     }
   }
 
