@@ -48,22 +48,28 @@ We expect all contributors to adhere to a respectful and inclusive environment. 
 
 3. Run tests to ensure your changes don't break existing functionality:
    ```bash
-   deno test
+   deno task test
    ```
 
-4. Commit your changes with a descriptive message:
+4. Check code formatting and run the linter:
+   ```bash
+   deno task fmt:check
+   deno task lint
+   ```
+
+5. Commit your changes with a descriptive message:
    ```bash
    git commit -m "feat: add new research capability for academic sources"
    ```
    
    We follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages.
 
-5. Push your branch to your fork:
+6. Push your branch to your fork:
    ```bash
    git push origin feature/your-feature-name
    ```
 
-6. Open a Pull Request to the main repository
+7. Open a Pull Request to the main repository
 
 ## Pull Request Process
 
@@ -72,6 +78,17 @@ We expect all contributors to adhere to a respectful and inclusive environment. 
 3. Add a clear description of the problem and solution in the PR description
 4. Reference any related issues using GitHub's issue linking
 5. Wait for review from maintainers
+
+### Continuous Integration
+
+All pull requests are automatically tested using GitHub Actions. The CI pipeline will:
+
+- Check code formatting (`deno task fmt:check`)
+- Run the linter (`deno task lint`)
+- Perform type checking (`deno task check`)
+- Run all tests (`deno task test`)
+
+A pull request must pass all CI checks before it can be merged. If the CI tests fail, you'll need to fix the issues and push the changes to your branch.
 
 ## Coding Standards
 

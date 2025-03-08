@@ -1,5 +1,7 @@
 # Deep Research Assistant
 
+[![Deno CI](https://github.com/ncolesummers/deep-researcher/actions/workflows/deno.yml/badge.svg)](https://github.com/ncolesummers/deep-researcher/actions/workflows/deno.yml)
+
 An advanced AI-powered research tool that conducts thorough research on any topic, delivering factual, well-cited, and coherent answers in a conversational format.
 
 ## Overview
@@ -76,8 +78,36 @@ For detailed documentation, see the [docs](/docs) directory:
 deno task dev
 
 # Run tests
-deno test
+deno task test
+
+# Run tests in watch mode
+deno task test:watch
+
+# Run linter
+deno task lint
+
+# Format code
+deno task fmt
+
+# Check formatting
+deno task fmt:check
+
+# Type check
+deno task check
 ```
+
+## Continuous Integration
+
+This project uses GitHub Actions for continuous integration. The workflow automatically:
+
+- Verifies code formatting
+- Runs the linter
+- Checks TypeScript types
+- Runs the test suite
+
+The CI workflow runs on all pull requests and pushes to the main branch.
+
+To manually trigger the workflow, you can use the "Actions" tab in the GitHub repository.
 
 ## Contributing
 
