@@ -47,7 +47,7 @@ cp .env.example .env
 3. Run the application:
 
 ```bash
-deno run --allow-net --allow-env src/main.ts
+deno task dev
 ```
 
 ## Features
@@ -62,29 +62,68 @@ deno run --allow-net --allow-env src/main.ts
 ### Basic Researcher
 
 ```bash
-deno run --allow-net --allow-env src/main.ts
+deno task dev
 ```
 
 ### Tavily Search
 
 ```bash
-deno run --allow-net --allow-env src/services/tavily/examples/tavily_search_example.ts "Your search query"
+deno task tavily:example "Your search query"
 ```
 
 ## Running Tests
 
 ```bash
-# Run the basic tests
-deno test --allow-net src/tests/main_test.ts
+# Run all tests
+deno task test
 
-# Run the Tavily search tests
-deno test --allow-net src/services/tavily/tests/tavily_search_test.ts
+# Run tests in watch mode
+deno task test:watch
 
-# Run the researcher tests (requires API keys)
-deno test --allow-net --allow-env src/core/tests/researcher_test.ts
+# Run only the core tests
+deno task test:core
+
+# Run only the Tavily search tests
+deno task test:tavily
 ```
 
 Note: Some tests are set to `ignore: true` because they require API keys. Edit the test files to enable them after setting up your environment.
+
+## Development Tasks
+
+The project includes several Deno tasks to streamline development:
+
+```bash
+# Start the development server with auto-reload
+deno task dev
+
+# Run all tests
+deno task test
+
+# Run tests in watch mode
+deno task test:watch
+
+# Run only the core tests
+deno task test:core
+
+# Run only the Tavily search tests
+deno task test:tavily
+
+# Run the Tavily search example
+deno task tavily:example "Your search query"
+
+# Run the linter
+deno task lint
+
+# Format code
+deno task fmt
+
+# Check formatting
+deno task fmt:check
+
+# Type check
+deno task check
+```
 
 ## License
 

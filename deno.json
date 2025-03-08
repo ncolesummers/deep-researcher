@@ -1,12 +1,15 @@
 {
   "tasks": {
-    "dev": "deno run --watch main.ts",
-    "test": "deno test --allow-env --allow-net",
-    "test:watch": "deno test --watch --allow-env --allow-net",
-    "lint": "deno lint",
+    "dev": "deno run --watch --allow-net --allow-env src/main.ts",
+    "test": "deno test --allow-env --allow-net src/",
+    "test:watch": "deno test --watch --allow-env --allow-net src/",
+    "test:core": "deno test --allow-env --allow-net src/core/tests/",
+    "test:tavily": "deno test --allow-env --allow-net src/services/tavily/tests/",
+    "tavily:example": "deno run --allow-net --allow-env src/services/tavily/examples/tavily_search_example.ts",
+    "lint": "deno lint src/",
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
-    "check": "deno check **/*.ts"
+    "check": "deno check src/**/*.ts"
   },
   "imports": {
     "@langchain/community": "npm:@langchain/community@^0.3.34",
