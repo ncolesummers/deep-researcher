@@ -1,118 +1,82 @@
-# Deep Research Assistant
+# Deep Researcher
 
-[![Deno CI](https://github.com/ncolesummers/deep-researcher/actions/workflows/deno.yml/badge.svg)](https://github.com/ncolesummers/deep-researcher/actions/workflows/deno.yml)
+An advanced AI-powered tool designed to conduct thorough research in response to user queries. 
+This project uses Deno, TypeScript, and OpenAI to create a conversational AI assistant 
+that performs comprehensive research and delivers factual, well-cited answers.
 
-An advanced AI-powered research tool that conducts thorough research on any topic, delivering factual, well-cited, and coherent answers in a conversational format.
+## Getting Started
 
-## Overview
+### Prerequisites
 
-Deep Research Assistant (DRA) is designed to transform how users gather information. Unlike traditional search engines that return a list of links, DRA:
+- [Deno](https://deno.land/) installed (version 1.30.0 or later)
+- OpenAI API key
+- Tavily API key (for future implementation)
 
-- Actively searches for information from diverse, authoritative sources
-- Analyzes and verifies content for factual accuracy
-- Synthesizes findings into coherent, well-structured responses
-- Maintains conversation context to support follow-up questions
-- Properly cites all sources for verification
+### Setup
+
+1. Clone this repository
+2. Copy `.env.example` to `.env` and add your API keys:
+
+```bash
+cp .env.example .env
+# Edit .env to add your API keys
+```
+
+3. Run the Hello World example:
+
+```bash
+deno run --allow-net --allow-env main.ts
+```
 
 ## Features
 
-- Comprehensive multi-source research capabilities
-- Factual accuracy with proper citations
-- Contextual memory for follow-up questions
-- Balanced presentation of different perspectives
-- Conversational interface
+- Simplified workflow demonstration for a research assistant
+- OpenAI integration for natural language understanding and generation
+- Future implementation will include:
+  - Full LangGraph workflow for orchestration
+  - Tavily search integration for retrieving information from the web
 
-## Prerequisites
+## Hello World Example
 
-- [Deno](https://deno.com/) 1.38 or higher
-- API keys for:
-  - OpenAI (or compatible LLM provider)
-  - Tavily
+The current implementation includes a simple "Hello World" example that:
 
-## Installation
+1. Takes a user query
+2. Simulates a research step (would use Tavily in a full implementation)
+3. Generates a response using OpenAI
 
-1. Clone the repository:
-```bash
-git clone https://github.com/ncolesummers/deep-researcher.git
-cd deep-researcher
-```
+This demonstrates the basic workflow that will be expanded to implement the full 
+Deep Researcher functionality as described in the PRD.
 
-2. Create a `.env` file based on the provided example:
-```bash
-cp .env.example .env
-```
+### Note on LangGraph
 
-3. Edit the `.env` file to add your API keys.
+While the project is designed to eventually use LangGraph for orchestration, the current 
+implementation uses a simplified approach to demonstrate the core concepts. Future versions 
+will incorporate LangGraph for more sophisticated workflow management.
 
-## Quick Start
-
-1. Set up your environment variables:
-```bash
-# .env file
-OPENAI_API_KEY=your_openai_key_here
-TAVILY_API_KEY=your_tavily_key_here
-```
-
-2. Run the development server:
-```bash
-deno task dev
-```
-
-3. Example usage:
-```typescript
-// Example code showing basic usage will be added here
-```
-
-## Documentation
-
-For detailed documentation, see the [docs](/docs) directory:
-
-- [Product Requirements Document](/docs/PRD.md)
-- API Reference (coming soon)
-- Tutorials (coming soon)
-
-## Development
+## Running Tests
 
 ```bash
-# Run the development server with auto-reload
-deno task dev
+# Run the basic tests (add function)
+deno test main_test.ts
 
-# Run tests
-deno task test
-
-# Run tests in watch mode
-deno task test:watch
-
-# Run linter
-deno task lint
-
-# Format code
-deno task fmt
-
-# Check formatting
-deno task fmt:check
-
-# Type check
-deno task check
+# Run the researcher tests (requires API keys)
+deno test researcher_test.ts
 ```
 
-## Continuous Integration
+Note: The researcher tests are currently set to `ignore: true` because they require 
+API keys. Edit the test file to enable them after setting up your environment.
 
-This project uses GitHub Actions for continuous integration. The workflow automatically:
+## Project Structure
 
-- Verifies code formatting
-- Runs the linter
-- Checks TypeScript types
-- Runs the test suite
-
-The CI workflow runs on all pull requests and pushes to the main branch.
-
-To manually trigger the workflow, you can use the "Actions" tab in the GitHub repository.
-
-## Contributing
-
-We welcome contributions to the Deep Research Assistant! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for details on how to get started.
+- `main.ts` - Entry point with basic example
+- `researcher.ts` - Research assistant implementation
+- `main_test.ts` - Basic tests
+- `researcher_test.ts` - Tests for the researcher functionality
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details. 
+MIT
+
+## Author
+
+Created by ncolesummers 

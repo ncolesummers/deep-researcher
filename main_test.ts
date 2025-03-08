@@ -1,6 +1,16 @@
-import { assertEquals } from "@std/assert";
-import { add } from "./main.ts";
+import { assertEquals } from '@std/assert';
+import { simpleResearcher } from './researcher.ts';
 
-Deno.test(function addTest() {
-  assertEquals(add(2, 3), 5);
+// This file contains basic tests for the deep-researcher project
+// We don't run the actual researcher tests here to avoid API key requirements
+
+// A placeholder test that simply checks the import works
+Deno.test('Researcher module imports correctly', () => {
+  // If we got here without errors, the module imported successfully
+  assertEquals(typeof simpleResearcher, 'function');
 });
+
+// Inform users about the researcher tests
+console.log(
+  'For LangGraph functionality tests, run: deno test researcher_test.ts'
+);
