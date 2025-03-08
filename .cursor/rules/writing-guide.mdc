@@ -1,0 +1,337 @@
+---
+description: Read before updating documentation
+globs: *.md
+alwaysApply: false
+---
+# Technical Writing Style Guide for Deno Project Documentation
+
+## Introduction
+
+This comprehensive style guide establishes standards for technical documentation in our Deno project. Following these guidelines ensures our documentation remains consistent, accessible, and valuable to developers of all experience levels. This guide specifically addresses content for README.MD, CONTRIBUTING.MD, and other project documentation files.
+
+## Document Structure and Organization
+
+### File Organization
+
+Organize documentation files in a logical hierarchy:
+
+- `README.md` - Project overview and quick start
+- `CONTRIBUTING.md` - Contribution guidelines
+- `SECURITY.md` - Security policies and reporting
+- `/docs/` directory - Detailed guides organized by topic
+  - `/docs/api/` - API reference documentation
+  - `/docs/tutorials/` - Step-by-step guides
+  - `/docs/concepts/` - Core concepts explanations
+
+### Document Structure
+
+Structure individual documents with a clear hierarchy:
+
+1. Begin with a concise title using a single # (H1)
+2. Follow with a brief introduction that explains the document's purpose
+3. Use progressive heading levels (H2, H3, etc.) to create logical sections
+4. Include a table of contents for documents exceeding 1000 words
+5. End with relevant links to related documentation
+
+Example README.md structure:
+
+```markdown
+# Project Name
+
+Brief description of the project (1-2 sentences).
+
+## Overview
+
+Expanded description including key features and benefits.
+
+## Installation
+
+Step-by-step installation instructions.
+
+## Quick Start
+
+Basic usage example to help users get started immediately.
+
+## Documentation
+
+Links to more comprehensive documentation.
+
+## Contributing
+
+Brief contribution guidelines with link to CONTRIBUTING.md.
+
+## License
+
+License information.
+```
+
+## Writing Style and Tone
+
+### Voice and Perspective
+
+- Use active voice rather than passive voice
+  - ✅ "Deno loads the module from the URL."
+  - ❌ "The module is loaded from the URL by Deno."
+- Write in second person, addressing the reader directly
+  - ✅ "You can configure permissions in the command."
+  - ❌ "Users can configure permissions in the command."
+- Maintain a professional but conversational tone that remains accessible
+
+### Clarity and Conciseness
+
+- Use simple, direct language over complex terminology
+- Keep sentences under 25 words when possible
+- One idea per paragraph, limited to 3-5 sentences
+- Eliminate redundant words and phrases
+- Be specific rather than vague:
+  - ✅ "Run the server on port 8000."
+  - ❌ "Run the server on an appropriate port."
+
+### Technical Accuracy
+
+- Verify all technical information before publishing
+- Test all code examples to ensure they work as documented
+- Provide context for why certain approaches are recommended
+- Cite sources or reference official documentation when appropriate
+- Update documentation when APIs or recommendations change
+
+## Formatting Conventions
+
+### Markdown Usage
+
+- Use semantic Markdown for consistent structure
+- Apply emphasis sparingly with *italics* for subtle emphasis and **bold** for important points
+- Use backticks for inline code: `Deno.readTextFile()`
+- Use code blocks with language specification for multi-line code:
+
+````markdown
+```typescript
+import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
+
+serve((req) => {
+  return new Response("Hello, World!");
+});
+```
+````
+
+### Code Examples
+
+- Include language identifier with all code blocks
+- Provide complete, runnable examples when possible
+- Include helpful comments to explain complex or non-obvious code
+- Follow our project's coding style guide in examples
+- Show both the code and its expected output when relevant
+
+Example of well-documented code:
+
+```typescript
+// Import the serve function from the standard library
+import { serve } from "https://deno.land/std@0.192.0/http/server.ts";
+
+// Define a handler function that returns a response
+serve((req) => {
+  // Parse the URL to get the pathname
+  const url = new URL(req.url);
+  
+  // Return different responses based on the path
+  if (url.pathname === "/api") {
+    return new Response(JSON.stringify({ message: "API endpoint" }), {
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+  
+  // Default response for other routes
+  return new Response("Hello, World!");
+});
+
+// Output:
+// Listening on http://localhost:8000/
+```
+
+### Visuals and Diagrams
+
+- Include diagrams for complex workflows or architectures
+- Use consistent visual styling across all diagrams
+- Provide text descriptions for all images to ensure accessibility
+- Optimize image file sizes without sacrificing quality
+- Link to higher resolution versions of complex diagrams
+
+## Content Specifics
+
+### README.md Best Practices
+
+- Begin with a clear, concise project description
+- Include badges for build status, version, and code coverage
+- Provide complete installation instructions
+- Include a "Quick Start" section with minimal working example
+- List key features with brief explanations
+- Include sections for:
+  - Prerequisites
+  - Installation
+  - Basic usage
+  - Configuration
+  - Contributing
+  - License
+
+### CONTRIBUTING.md Best Practices
+
+- Outline the contribution workflow clearly
+- Explain the project's development environment setup
+- Document coding standards and conventions
+- Describe the pull request process step by step
+- Include information about:
+  - Issue tracking
+  - Branch naming conventions
+  - Commit message format
+  - Testing requirements
+  - Code review process
+
+### API Documentation
+
+- Document all public APIs comprehensively
+- Include function signatures with parameter types
+- Describe parameters, return values, and exceptions
+- Provide usage examples for each function
+- Document type definitions and interfaces
+
+### Error Messages and Troubleshooting
+
+- Document common error messages and their causes
+- Provide actionable steps for resolving issues
+- Include troubleshooting sections for complex features
+- Link error messages to relevant documentation sections
+
+## Technical Content Guidelines
+
+### Version Information
+
+- Specify the minimum Deno version required
+- Indicate when features are version-specific
+- Document deprecated features with migration paths
+- Use semantic versioning references consistently
+
+### Command Line Examples
+
+- Use consistent formatting for command line examples:
+
+```
+$ deno run --allow-net server.ts
+```
+
+- Indicate expected output where helpful
+- Explain significant flags and options
+- Use placeholders with descriptive names for variable input:
+  - ✅ `deno run --allow-read=<DIRECTORY_PATH> script.ts`
+  - ❌ `deno run --allow-read=x script.ts`
+
+### Security Considerations
+
+- Document permission requirements explicitly
+- Explain security implications of configuration options
+- Highlight secure defaults and best practices
+- Include a dedicated security section for features with significant security considerations
+
+## Maintenance and Review
+
+### Documentation Lifecycle
+
+- Review documentation when corresponding code changes
+- Archive documentation for deprecated features
+- Maintain a changelog of significant documentation updates
+- Schedule regular reviews of high-traffic documentation
+
+### Collaborative Processes
+
+- Establish a documentation review process similar to code review
+- Include technical writers or documentation specialists in reviews
+- Define clear ownership for documentation sections
+- Create templates for common documentation types
+
+## Accessibility and Inclusivity
+
+### Inclusive Language
+
+- Use gender-neutral language throughout
+- Avoid idioms that may not translate across cultures
+- Define technical terms and acronyms on first use
+- Avoid ableist language and metaphors
+
+### Accessibility Standards
+
+- Ensure documentation is screen reader friendly
+- Provide alt text for all images and diagrams
+- Use descriptive link text rather than generic phrases like "click here"
+- Maintain adequate color contrast for readability
+
+## Examples in Practice
+
+### Example README.md Section
+
+```markdown
+## Authentication
+
+This module provides secure authentication for Deno applications. It supports both JWT and session-based authentication strategies.
+
+### Features
+
+- Secure token generation and validation
+- Customizable token expiration
+- Built-in protection against common attacks
+- Persistence options for various storage backends
+
+### Basic Usage
+
+```typescript
+import { createAuth } from "https://deno.land/x/auth@v1.0.0/mod.ts";
+
+// Initialize the authentication module
+const auth = createAuth({
+  secret: Deno.env.get("AUTH_SECRET"),
+  tokenExpiration: "2h"
+});
+
+// Create a protected route handler
+function protectedRoute(req) {
+  const user = auth.verify(req);
+  if (!user) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+  return new Response(`Hello, ${user.name}!`);
+}
+```
+
+For more advanced configuration options, see the [Authentication Guide](mdc:docs/authentication.md).
+```
+
+### Example CONTRIBUTING.md Section
+
+```markdown
+## Pull Request Process
+
+We follow a structured process for contributions:
+
+1. **Fork the repository** and create your branch from `main`.
+   ```
+   git checkout -b feature/amazing-feature
+   ```
+
+2. **Install development dependencies** by running:
+   ```
+   deno task setup
+   ```
+
+3. **Make your changes** following our coding standards.
+
+4. **Write or update tests** to verify your changes. Run tests locally:
+   ```
+   deno task test
+   ```
+
+5. **Update documentation** to reflect any changes to the interface.
+
+6. **Submit a pull request** with a clear title and description.
+
+All pull requests require passing tests and approval from at least one maintainer before merging.
+```
+
+By following this style guide, we ensure our documentation remains a valuable resource that enhances the developer experience with our Deno project. Documentation, like code, is a living artifact that should evolve with the project and continually improve through thoughtful collaboration.

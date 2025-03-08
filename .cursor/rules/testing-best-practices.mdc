@@ -1,0 +1,333 @@
+---
+description: Comprehensive Best Practices for Testing
+globs: *.ts,*.tsx
+alwaysApply: false
+---
+# Comprehensive Testing Best Practices for Deno
+
+Testing is a critical aspect of software development in Deno. As a modern runtime with built-in testing capabilities, Deno offers powerful tools for ensuring code quality through different testing strategies. Let's explore best practices for unit, integration, and end-to-end testing in the Deno ecosystem.
+
+## Unit Testing in Deno
+
+Deno provides native testing capabilities without requiring external frameworks, which simplifies the unit testing process considerably.
+
+### Leverage Deno's Built-in Testing API
+
+Deno's standard library includes a robust testing API that you should use as your foundation:
+
+```typescript
+// math.ts
+export function add(a: number, b: number): number {
+  return a + b;
+}
+
+// math_test.ts
+import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import { add } from "./math.ts";
+
+Deno.test("add function correctly adds two numbers", () => {
+  assertEquals(add(2, 3), 5);
+  assertEquals(add(-1, 1), 0);
+  assertEquals(add(0, 0), 0);
+});
+```
+
+### Structure Tests for Clarity and Maintainability
+
+Organize your tests with nested test functions to create logical groupings that mirror your application structure:
+
+```typescript
+Deno.test("User module", async (t) => {
+  await t.step("validation", async (t) => {
+    await t.step("validates email format", () => {
+      // Test email validation
+    });
+    
+    await t.step("validates password strength", () => {
+      // Test password validation
+    });
+  });
+  
+  await t.step("authentication", () => {
+    // Authentication tests
+  });
+});
+```
+
+### Write Pure Unit Tests
+
+True unit tests should isolate the code being tested by mocking dependencies. Deno supports this through its testing API:
+
+```typescript
+// Mock external dependencies
+const originalFetch = globalThis.fetch;
+globalThis.fetch = async (input: string) => {
+  // Return a controlled response for testing
+  return new Response(JSON.stringify({ success: true }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" }
+  });
+};
+
+// Restore original after tests
+Deno.test("API client returns correct data", async () => {
+  try {
+    // Test with mocked fetch
+    const result = await yourApiFunction();
+    assertEquals(result.success, true);
+  } finally {
+    // Restore original fetch
+    globalThis.fetch = originalFetch;
+  }
+});
+```
+
+### Use Test Coverage Tools
+
+Deno includes built-in code coverage reporting. Use it to identify gaps in your test suite:
+
+```bash
+deno test --coverage=coverage_dir
+deno coverage coverage_dir
+```
+
+## Integration Testing
+
+Integration tests verify that multiple components work together correctly. These are essential in a Deno application where modules often interact with each other.
+
+### Create Isolated Test Environments
+
+For database integration tests, use Docker containers or in-memory databases that can be provisioned and torn down as part of your test suite:
+
+```typescript
+// Setup before tests
+Deno.test("Database integration tests", async (t) => {
+  // Setup test database
+  const db = await setupTestDatabase();
+  
+  await t.step("can create records", async () => {
+    const result = await db.createUser({ name: "Test User" });
+    assertEquals(result.name, "Test User");
+  });
+  
+  await t.step("can retrieve records", async () => {
+    const user = await db.getUserById(1);
+    assertEquals(user.id, 1);
+  });
+  
+  // Teardown after tests
+  await cleanupTestDatabase(db);
+});
+```
+
+### Test HTTP Integrations
+
+For testing HTTP servers and clients, use Deno's built-in HTTP utilities:
+
+```typescript
+import { serve } from "https://deno.land/std/http/server.ts";
+import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+
+// Start a test server
+const controller = new AbortController();
+const serverPromise = serve((req) => {
+  return new Response("Hello, World!");
+}, { signal: controller.signal, port: 8000 });
+
+Deno.test("HTTP integration", async () => {
+  try {
+    // Test HTTP client against the server
+    const response = await fetch("http://localhost:8000/");
+    assertEquals(await response.text(), "Hello, World!");
+  } finally {
+    // Stop the server after test
+    controller.abort();
+    await serverPromise;
+  }
+});
+```
+
+### Use Snapshots for Complex Responses
+
+For API responses or complex data structures, consider using snapshot testing:
+
+```typescript
+import { assertSnapshot } from "https://deno.land/std/testing/snapshot.ts";
+
+Deno.test("API response matches expected structure", async (t) => {
+  const response = await yourApiFunction();
+  
+  // Compare against a stored snapshot
+  await assertSnapshot(t, response);
+});
+```
+
+## End-to-End Testing
+
+End-to-end tests validate the entire application stack from the user interface to the database.
+
+### Leverage Browser Automation
+
+For web applications, use Puppeteer or Playwright with Deno:
+
+```typescript
+// Using Playwright with Deno
+import { chromium } from "https://deno.land/x/playwright@v1.30.0/mod.ts";
+
+Deno.test("User signup flow works end-to-end", async () => {
+  const browser = await chromium.launch();
+  const page = await browser.newPage();
+  
+  try {
+    await page.goto("http://localhost:8000/signup");
+    await page.fill('input[name="email"]', "test@example.com");
+    await page.fill('input[name="password"]', "securePassword123");
+    await page.click('button[type="submit"]');
+    
+    // Verify successful signup
+    await page.waitForSelector('.welcome-message');
+    const text = await page.textContent('.welcome-message');
+    assertEquals(text, "Welcome, test@example.com!");
+  } finally {
+    await browser.close();
+  }
+});
+```
+
+### Create Reproducible Test Data
+
+Generate consistent test data for E2E tests:
+
+```typescript
+// Create test data before running E2E tests
+async function setupE2ETestEnvironment() {
+  const db = await connectToDatabase();
+  await db.executeSql("DELETE FROM users"); // Clear existing data
+  
+  // Create test users and other required data
+  await db.executeSql(`
+    INSERT INTO users (email, password_hash) 
+    VALUES ('test@example.com', '${await hashPassword("password123")}')
+  `);
+  
+  return db;
+}
+
+// E2E test using the test environment
+Deno.test("User login and dashboard flow", async () => {
+  const db = await setupE2ETestEnvironment();
+  // Run E2E tests with Playwright or similar
+  // ...
+  await db.close();
+});
+```
+
+### Test in a Production-Like Environment
+
+Deploy your application to a staging environment that mirrors production:
+
+```typescript
+// Deploy test build before running E2E tests
+async function deployTestBuild() {
+  const process = Deno.run({
+    cmd: ["deno", "run", "--allow-net", "--allow-read", "deploy_staging.ts"],
+  });
+  
+  // Wait for deployment to complete
+  const status = await process.status();
+  process.close();
+  
+  if (!status.success) {
+    throw new Error("Failed to deploy test build");
+  }
+}
+
+Deno.test("E2E tests on staging", async () => {
+  await deployTestBuild();
+  // Run E2E tests against the staging environment
+});
+```
+
+## Cross-Cutting Test Practices
+
+These practices apply to all testing levels in Deno:
+
+### Implement Test Fixtures
+
+Create reusable test fixtures to set up common test scenarios:
+
+```typescript
+// test_utils.ts
+export function createTestUser() {
+  return {
+    id: 1,
+    name: "Test User",
+    email: "test@example.com",
+    // ...other properties
+  };
+}
+
+// In your test file
+import { createTestUser } from "./test_utils.ts";
+
+Deno.test("user functions work correctly", () => {
+  const testUser = createTestUser();
+  // Test with the fixture
+});
+```
+
+### Run Tests in CI/CD Pipelines
+
+Configure CI systems like GitHub Actions to run your Deno tests:
+
+```yaml
+# .github/workflows/deno.yml
+name: Deno Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Run unit tests
+        run: deno test --allow-none
+      - name: Run integration tests
+        run: deno test --allow-net --allow-read integration/
+      - name: Run E2E tests
+        run: deno test --allow-all e2e/
+```
+
+### Adopt Test-Driven Development (TDD)
+
+Write tests before implementing features to ensure comprehensive test coverage:
+
+1. Write a failing test for a new feature
+2. Implement the minimum code needed to pass the test
+3. Refactor while keeping tests passing
+
+### Simulate Network Conditions
+
+Test applications under various network conditions using tools like Toxiproxy or network throttling:
+
+```typescript
+Deno.test("application works with high latency", async () => {
+  // Set up network simulation with high latency
+  // ...
+  
+  // Run tests under these conditions
+  const startTime = performance.now();
+  const result = await yourFunction();
+  const duration = performance.now() - startTime;
+  
+  // Verify functionality and reasonable performance 
+  assertEquals(result.success, true);
+  assert(duration < ACCEPTABLE_TIMEOUT);
+});
+```
+
+By implementing these testing practices across unit, integration, and end-to-end levels, you'll create a robust testing strategy that ensures your Deno applications are reliable, maintainable, and perform well under real-world conditions. The built-in testing capabilities of Deno make it particularly well-suited for implementing these practices without excessive dependencies or configuration.

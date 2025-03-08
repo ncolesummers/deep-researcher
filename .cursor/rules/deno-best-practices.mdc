@@ -1,0 +1,36 @@
+---
+description: Best Practices for Deno development
+globs: *.ts,*.tsx
+alwaysApply: false
+---
+# Deno Best Practices
+
+Developing TypeScript applications with Deno offers a modern, secure, and efficient environment. To maximize productivity and maintainability, consider the following best practices: ￼
+
+1. Utilize Deno’s Built-in TypeScript Support
+	•	Seamless Integration: Deno natively supports TypeScript, eliminating the need for external compilers or configurations. This allows you to run TypeScript files directly without additional setup.
+
+2. Leverage the deno.json Configuration
+	•	Centralized Configuration: Use the deno.json file to manage compiler options, import maps, and other settings. This centralization simplifies project configuration and ensures consistency across your codebase. ￼
+
+3. Explicit Module Imports
+	•	Specify File Extensions: Always include the appropriate file extensions (e.g., .ts, .js) in your import statements. This explicitness aligns with Deno’s module resolution strategy and prevents potential import errors. ￼
+
+4. Manage Third-Party Dependencies Wisely
+	•	Use URL Imports: Deno allows importing modules directly from URLs, promoting a decentralized dependency management approach. Ensure you’re importing from trusted sources to maintain security. ￼
+	•	Leverage Import Maps: For better control over module resolution, utilize import maps to alias or pin specific versions of dependencies. ￼
+
+5. Embrace Deno’s Security Model
+	•	Explicit Permissions: Deno operates on a secure-by-default principle, requiring explicit permissions for operations like file system access or network requests. Always specify the necessary permissions when running your scripts. ￼
+
+6. Optimize Type Checking
+	•	On-Demand Type Checking: By default, Deno skips type checking during execution for performance reasons. Use the --check flag to enforce type checking when necessary, ensuring type safety without compromising speed. ￼
+
+7. Align with Deno’s Standard Library
+	•	Standard Modules: Utilize Deno’s standard library for common functionalities. This practice reduces external dependencies and ensures compatibility with Deno’s runtime.
+
+8. Implement Robust Testing Practices
+	•	Built-in Testing Tools: Deno provides integrated testing utilities. Regularly write and run tests to maintain code quality and catch issues early.
+
+9. Maintain Code Quality with Formatting and Linting
+	•	Consistent Style: Use Deno’s built-in formatter and linter to enforce a consistent code style, enhancing readability and maintainability.

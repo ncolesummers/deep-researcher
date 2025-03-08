@@ -1,0 +1,15 @@
+---
+description: The technology stack for the project
+globs: 
+alwaysApply: true
+---
+
+# Tech Stack
+
+We use the following technologies in this tech stack:
+
+- Deno
+- TypeScript
+- Langchain / LangGraph
+- Tavily
+- LLM(s)

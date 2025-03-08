@@ -1,0 +1,13 @@
+{
+  "tasks": {
+    "dev": "deno run --watch main.ts"
+  },
+  "imports": {
+    "@langchain/community": "npm:@langchain/community@^0.3.34",
+    "@langchain/core": "npm:@langchain/core@^0.3.42",
+    "@langchain/langgraph": "npm:@langchain/langgraph@^0.2.54",
+    "@langchain/openai": "npm:@langchain/openai@^0.4.4",
+    "@std/assert": "jsr:@std/assert@1",
+    "zod": "npm:zod@^3.24.2"
+  }
+}
