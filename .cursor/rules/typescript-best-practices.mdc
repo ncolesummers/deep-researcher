@@ -82,6 +82,40 @@ Generate code, corrections, and refactorings that comply with the basic principl
   - Add context.
   - Otherwise, use a global handler.
 
+## Observability
+
+- Implement structured logging with consistent context fields.
+  - Log level must match the significance of the event (debug, info, warn, error).
+  - Include correlation IDs in all logs for request tracing.
+  - Use camelCase for log field names.
+
+
+- Expose metrics for key business and technical operations.
+  - Track execution time for critical functions using decorators or wrappers.
+  - Count important business events (e.g., orders placed, users registered).
+  - Monitor resource usage (memory, CPU) for long-running processes.
+
+- Implement distributed tracing for service-to-service communication.
+  - Propagate trace context across service boundaries.
+  - Tag spans with relevant metadata for filtering and analysis.
+
+- Create health check endpoints that validate dependencies.
+  - Implement both liveness and readiness probes.
+  - Return appropriate status codes (200 for healthy, non-200 for unhealthy).
+
+- Design for debuggability.
+  - Create debug-level logs that can be enabled in production when needed.
+  - Include sufficient context in error messages for troubleshooting.
+  - Implement feature flags for enabling detailed diagnostics.
+
+- Use strong typing for telemetry data.
+  - Define interfaces for log message structures.
+  - Create enums for metric names and log event types.
+
+- Separate observability code from business logic.
+  - Use aspects, decorators, or middleware for cross-cutting concerns.
+  - Create a centralized observability service for configuration.
+
 ## Testing
 
 - Follow the Arrange-Act-Assert convention for tests.
