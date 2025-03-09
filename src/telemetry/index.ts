@@ -60,5 +60,5 @@ export function initializeTelemetry(): {
 
 // Re-export components for easier imports
 export { Logger, LogLevel } from './logger.ts';
-export { createCustomSpan, createManualSpan } from './tracing.ts';
+export { createTracedFunction, createSpanManager } from './tracing.ts';
 export * as metrics from './metrics.ts';
